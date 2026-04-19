@@ -1,22 +1,23 @@
 package sample0415;
 
+//座標を管理するクラス
 public class Position {
-	//フィールド
+	// フィールド
 	private int row;
 	private int column;
-	
-	//コンストラクタ
-	public Position (int row, int column) {
+
+	// コンストラクタ
+	public Position(int row, int column) {
 		this.row = row;
 		this.column = column;
-		
+
 	}
-	
+
 	public int getRow() {
 		return row;
-			
+
 	}
-	
+
 	public int getColumn() {
 		return column;
 	}

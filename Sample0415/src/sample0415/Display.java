@@ -1,10 +1,11 @@
 package sample0415;
 
+//コンソール表示を担当するクラス
 public class Display {
-	//フィールド
+	// フィールド
 	private static final int SIZE = 3;
-	
-	//プレイヤーのターン案内を表示するメソッド
+
+	// プレイヤーのターン案内を表示するメソッド
 	public void showTurnInfo(String player) {
 		System.out.println("プレイヤー " + player + " の番です");
 		System.out.println("配置したい場所を入力してください。");
@@ -13,7 +14,7 @@ public class Display {
 
 	}
 
-	//結果表示メソッド
+	// 結果表示メソッド
 	public void showResult(String winner) {
 
 		if (winner != null) {
@@ -22,13 +23,13 @@ public class Display {
 			System.out.println("引き分けです！");
 		}
 	}
-	
-	//区切り・改行
+
+	// 区切り・改行
 	public void showNewLine() {
 		System.out.println();
 	}
-	
-	//盤面表示メソッド
+
+	// 盤面表示メソッド
 	public void printBoard(Board board) {
 		for (int i = 0; i < SIZE; i++) {
 			for (int j = 0; j < SIZE; j++) {
@@ -44,5 +45,17 @@ public class Display {
 				System.out.println("-----------");
 			}
 		}
+	}
+
+	// 配置場所表示メソッド
+	public void showPlace(int row, int column, Player player) {
+		if (player == Player.HumanPlayer) {
+			System.out.println("あなたが (" + row + ", " + column + ") に置きました。");
+		} else if (player == Player.CpuPlayer) {
+			System.out.println("CPUが (" + row + ", " + column + ") に置きました。");
+		}
+
+		showNewLine();
+
 	}
 }

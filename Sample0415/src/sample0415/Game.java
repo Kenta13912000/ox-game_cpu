@@ -1,88 +1,95 @@
 package sample0415;
 
+//ゲームの実行・進行を担当するクラス
 public class Game {
-	//フィールド
-	private Board board = new Board();
-	private Display display = new Display();
-	
-	private Player player1;
-	private Player player2;
+	// フィールド
+	private Board board;
+	private Display display;
+	private PlaceInput input;
+	private CpuPlayer cpuPlayer;
 	private Player currentPlayer;
-	
-	//コンストラクタ
-	public Game() {
-		InputHandler inputHandler = new InputHandler();
-		player1 = new HumanPlayer("o", inputHandler);
-		player2 = new CpuPlayer("x");
-		
-		currentPlayer = player1;
-	}
 
-	//ゲーム開始
+	// ゲーム実行
 	public void run() {
-		//ゲーム開始から終了までループ
-		gameLoop();
+		// 初期化処理
+		initialize();
 
-		//終了処理
+		// メイン処理
+		mainProcess();
+
+		// 終了処理
 		finish();
 
 	}
 
-	//ゲーム開始～終了までのループメソッド
-	private void gameLoop() {
-		while (!isGameOver()) {
-			//入力～配置までの処理
+	// 初期化処理
+	private void initialize() {
+		board = new Board();
+		display = new Display();
+		input = new PlaceInput();
+		cpuPlayer = new CpuPlayer();
+		currentPlayer = Player.HumanPlayer;
+	}
+
+	// メイン処理（終了条件を満たすまでループ）
+	private void mainProcess() {
+		// stateを定義
+		GameState state = GameState.ONGOING;
+
+		while (state == GameState.ONGOING) {
+			// 入力～配置までの処理
 			playTurn();
 
-			//勝敗判定
-			if (board.checkWin(currentPlayer.getMark())) {
-				break;
-			}
+			// 勝敗判定
+			state = board.checkWin(currentPlayer);
 
-			//プレイヤー切り替え
-			switchPlayer();
+			// プレイヤー切り替え
+			if (state == GameState.ONGOING) {
+				switchPlayer();
+			}
 
 		}
 	}
 
-	//1ターン分のメソッド
+	// 1ターン分のメソッド
 	private void playTurn() {
-		//現在のプレイヤーのターンを表示
+		// 現在のプレイヤーのターンを表示
 		display.showTurnInfo(currentPlayer.getMark());
 
-		//盤面表示
+		// 盤面表示
 		display.printBoard(board);
 		display.showNewLine();
 
-		//入力受付・バリデーション
-		Position pos = currentPlayer.nextMove(board);
+		// 入力受付・バリデーション
+		Position pos;
+		if (currentPlayer == Player.HumanPlayer) {
+			pos = input.inputPlace(board);
+		} else {
+			pos = cpuPlayer.cpuMark(board);
+		}
 
 		// 指定された位置に現在のプレイヤーのマークを配置
-		board.placeMark(pos.getRow(), pos.getColumn(), currentPlayer.getMark());
+		board.placeMark(pos.getRow(), pos.getColumn(), currentPlayer);
 
+		// 配置場所をコンソールに表示
+		display.showPlace(pos.getRow(), pos.getColumn(), currentPlayer);
 	}
 
-	//終了判定メソッド
-	//勝者がいる、または空きマスがない場合にゲーム終了とする
-	private boolean isGameOver() {
-		return board.getWinner() != null || !board.hasEmptyCells();
-	}
-
-	//プレイヤー切り替えメソッド
+	// プレイヤー切り替えメソッド
 	private void switchPlayer() {
-		if (currentPlayer == player1) {
-			currentPlayer = player2;
+		if (currentPlayer == Player.HumanPlayer) {
+			currentPlayer = Player.CpuPlayer;
 		} else {
-			currentPlayer = player1;
+			currentPlayer = Player.HumanPlayer;
 		}
 	}
 
-	//終了処理メソッド
+	// 終了処理メソッド
 	private void finish() {
-		//終了後の盤面表示
+		// 終了後の盤面表示
 		display.printBoard(board);
 
-		//結果を表示
+		// 結果を表示
 		display.showResult(board.getWinner());
 	}
 }
