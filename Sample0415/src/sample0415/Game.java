@@ -9,11 +9,14 @@ public class Game {
 	private CpuPlayer cpuPlayer;
 	private Player currentPlayer;
 
-	// ゲーム実行
-	public void run() {
+	// コンストラクタ
+	public Game() {
 		// 初期化処理
 		initialize();
+	};
 
+	// ゲーム実行
+	public void run() {
 		// メイン処理
 		mainProcess();
 

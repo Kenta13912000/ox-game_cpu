@@ -96,4 +96,10 @@ public class Board {
 
 	}
 
+	// 指定したマスを空白にするメソッド
+	public void clearCell(int row, int column) {
+		board[row][column] = " ";
+
+	}
+
 }
